@@ -1,7 +1,7 @@
 The run_analysis.R script completes the necessary data manipulation to attain a tidy data set for future analyses.
 
 1. Create a working directory: 
-	      - Check where the working directory is located
+	- Check where the working directory is located
         - Create a "Project" folder to store the original dataset
         - Set this folder as your working directory for saving data files needed for remainder
 	        of the script.
@@ -65,7 +65,7 @@ The run_analysis.R script completes the necessary data manipulation to attain a 
 	-Update "final" data frame to include the activity labels by merging the "final" data frame with the 
 		"activity_labels" data frame by "ActivityID" (10299 rows, 69 columns)
 
-10. Step 4: Appropriately lavels the data set with descriptive variable names
+10. Step 4: Appropriately labels the data set with descriptive variable names
 	- Updated all column names in "final" dataset to do the following using gsub() function:
 		- Change all column names starting with "t" to be "Time"
 		- Change all column names starting with "f" to be "Frequency"
