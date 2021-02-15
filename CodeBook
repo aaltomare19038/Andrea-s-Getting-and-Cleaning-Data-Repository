@@ -1,0 +1,87 @@
+The run_analysis.R script completes the necessary data manipulation to attain a tidy data set for future analyses.
+
+1. Create a working directory: 
+	      - Check where the working directory is located
+        - Create a "Project" folder to store the original dataset
+        - Set this folder as your working directory for saving data files needed for remainder
+	        of the script.
+
+2. Assign objects for all links needed in script
+	- zipURL <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
+		  -link to original data set in a zip file
+	- features_list <- "UCI HAR Dataset\\features.txt"
+		  -The features selected for this database come from the accelerometer and gyroscope 3-axial raw signals tAcc-XYZ and tGyro-XYZ
+	- test_set <- "UCI HAR Dataset\\test\\X_test.txt"
+		  - contains the features recordings of each test volunteer subject (9 out of 30 subjects)
+	- test_labels <- "UCI HAR Dataset\\test\\y_test.txt"
+		  - contains the activity labels codes for test volunteer subjects
+	- test_set_subjects <- "UCI HAR Dataset\\test\\subject_test.txt"
+		  - contains the testing volunteer subjects ID numbers
+	- training_set <- "UCI HAR Dataset\\train\\X_train.txt"
+		  - contains the features recordings of each training volunteer subject (21 out of 30 subjects)
+	- training_labels <- "UCI HAR Dataset\\train\\y_train.txt"
+		  - contains the activity labels codes for training volunteer subjects
+	- training_set_subjects <- "UCI HAR Dataset\\train\\subject_train.txt"
+		  - contains the training volunteer subjects ID numbers
+	- activity_labels_link <- "UCI HAR Dataset\\activity_labels.txt"
+		  - contains a list of activities performed by volunteer subjects with it's associated code
+	- tidy_dataset_link <- "TidyData.txt"
+		  - name of the final tidy data set text file to be saved to working directory
+
+3. Retrieve the zip file, download to working directory, and unzip the file
+	- use download.file to download the zipURL file and save as "dataset.zip"
+	- use unzip function to unzip the folder and save in working directory
+	- resulting folder in working directory is UCI HAR Dataset
+
+4. Read in the Column Names for the Training and Test Volunteer Subjects
+	-Create "features" data frame from "features_list" object assigned in #2 (561 rows,2 columns)
+	-Create "names" data frame of just the column names from second column of features data frame 
+	 and flipping the columns to rows (1 row, 561 columns)
+
+5. Create Test Volunteer Subject Data Frame
+	-Create "test_data" data frame from "test_set" object in #2 (2947 rows, 561 columns)
+	-Create "test_labels" data frame from "test_labels" object in #2 assigning "ActivityID" as column name (2947 rows, 1 column)
+	-Create "test_subjects" data frame from "test_set_subjects" object in #2 assigning "SubjectID" as column name (2947 rows, 1 column)
+	-Create "final_test" data frame of all test subject data by combining "test_data","test_labels", and "test_subjects" data frame using cbind() (2947 rows, 563 columns)
+		
+
+6. Create Training Volunteer Subject Data Frame
+	-Create "training_data" data frame from "training_set" object in #2 (7352 rows, 561 columns)
+	-Create "training_labels" data frame from "training_labels" object in #2 assigning "ActivityID" as column name (7352 rows, 1 column)
+	-Create "training_subjects" data frame from "training_set_subjects" object in #2 assigning "SubjectID" as column name (7352 rows, 1 column)
+	-Create "final_training" data frame of all test subject data by combining "training_data","training_labels", and "training_subjects" data frame using cbind() (7352 columns, 563 columns)
+
+7. Step 1 of Assignment: Merges the Training and Test Sets to Create One Data Set
+	-Create "merged_data" by merging "final_training" and "final_test" data frames together, selecting all data (10299 rows, 563 columns)
+
+8. Step 2: Extracts only the measurements on the mean and standard deviation for each measurement
+	-Create "cols" object of columns with "mean" or "std" or "ActivityID" or "SubjectID" using grep() function (81 rows, 1 column)
+	-Create "final" object selecting only the "cols" column names in the "merged_data" data frame (10299 rows, 81 columns)
+	-Remove "meanFreq" columns from the "final" dataset (10299 rows, 68 columns)
+
+9. Step 3: Uses descriptive activity names to name the activities in the data set
+	-Create "activity_labels" data frame from "activity_lavels_link" in #2 naming the column names
+		"ActivityID" and "Activity" (6 rows, 2 columns)
+	-Update "final" data frame to include the activity labels by merging the "final" data frame with the 
+		"activity_labels" data frame by "ActivityID" (10299 rows, 69 columns)
+
+10. Step 4: Appropriately lavels the data set with descriptive variable names
+	- Updated all column names in "final" dataset to do the following using gsub() function:
+		- Change all column names starting with "t" to be "Time"
+		- Change all column names starting with "f" to be "Frequency"
+		- Change all column names with "Acc" to be "Accelerometer"
+		- Change all column names with "Gyro" to be "Gyroscope"
+		- Change all column names with "Mag" to be "Magnitude"
+		- Change all column names with "BodyBody" to be "Body"
+		- Change all column names with any amount of periods "\\." to be removed
+		- Change all column names with "mean" to be "Mean"
+		- Change all column names with "std" to be "Std"
+	- Move "SubjectID" to the first column of the "final" data frame
+
+11. Step 5: From the data set in Step 4, create a second, independently tidy data set with the average
+	of each variable for each activity and each subject
+	- reference dplyr package
+	- Create "TidyData" data frame from the "final" data frame by grouping on the "SubjectID" and "ActivityID"
+		then obtainings the means of all the columns for each subject and each activity they completed
+	- Write out the "TidyData" data frame to a text file without row names to the "tidy_dataset_link" from #2
+
