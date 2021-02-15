@@ -7,7 +7,7 @@ Using Smartphones Data Set"
 Original Data Set can be found here:
 https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip  
 
-Files Included in the Repository Include:
+Files Included in the Repository are:
 1. CodeBook.md - this code book describles all the variables, the data, and any transformations or work
 		 performed to clean the data
 2. run_analysis.R - an R script that completes the following using the original dataset above:
